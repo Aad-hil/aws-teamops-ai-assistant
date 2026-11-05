@@ -1,4 +1,3 @@
-import json
 import os
 import boto3
 
@@ -6,20 +5,28 @@ table = boto3.resource("dynamodb").Table(os.environ["EXECUTIONS_TABLE"])
 
 
 def lambda_handler(event, context):
-    # Internal-only diagnostic function. Caller authentication and team
-    # authorization MUST be implemented before attaching to a user-facing agent.
-    limit = min(max(int((event or {}).get("limit", 10)), 1), 25)
-    # Scan is intentionally for small synthetic demo tables only.
-    # Production workloads should use a team/project GSI and Query.
+    # Internal-only demo diagnostic function. Enforce caller authentication
+    # and team authorization before exposing this tool to end users.
+    event = event if isinstance(event, dict) else {}
+
+    try:
+        limit = min(max(int(event.get("limit", 10)), 1), 25)
+    except (ValueError, TypeError):
+        return {"error": "Invalid limit. Provide an integer between 1 and 25."}
+
+    # Scan is only suitable for small synthetic demo tables.
+    # Production should use a team/project GSI with Query and pagination.
     items = []
-    response = table.scan(Limit=100)
-    items.extend(response.get("Items", []))
-    while "LastEvaluatedKey" in response and len(items) < 500:
-        response = table.scan(
-            Limit=100, ExclusiveStartKey=response["LastEvaluatedKey"]
-        )
+    scan_args = {"Limit": 100}
+
+    while len(items) < 500:
+        response = table.scan(**scan_args)
         items.extend(response.get("Items", []))
-    items = [
+        if "LastEvaluatedKey" not in response:
+            break
+        scan_args["ExclusiveStartKey"] = response["LastEvaluatedKey"]
+
+    executions = [
         {
             "execution_id": item["execution_id"],
             "status": item["status"],
@@ -34,5 +41,5 @@ def lambda_handler(event, context):
         if item.get("team_id") == "data-engineering"
         and item.get("project_id") == "customer-ingestion"
     ]
-    items.sort(key=lambda item: item["timestamp"], reverse=True)
-    return {"statusCode": 200, "body": json.dumps({"executions": items[:limit]})}
+    executions.sort(key=lambda item: item["timestamp"], reverse=True)
+    return {"executions": executions[:limit]}
