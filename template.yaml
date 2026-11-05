@@ -47,17 +47,6 @@ Resources:
             BucketName: !Ref DataBucket
         - DynamoDBWritePolicy:
             TableName: !Ref ExecutionsTable
-      Events:
-        CsvUpload:
-          Type: S3
-          Properties:
-            Bucket: !Ref DataBucket
-            Events: s3:ObjectCreated:*
-            Filter:
-              S3Key:
-                Rules:
-                  - Name: prefix
-                    Value: input/
   DiagnosticsFunction:
     Type: AWS::Serverless::Function
     Properties:
