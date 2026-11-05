@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: TeamOps AI synthetic ingestion workflow and read-only diagnostics
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 30
+    MemorySize: 128
+    Architectures:
+      - x86_64
+Resources:
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+  ExecutionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: execution_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: execution_id
+          KeyType: HASH
+  ProcessorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-processor'
+      CodeUri: src/processor/
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          EXECUTIONS_TABLE: !Ref ExecutionsTable
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref DataBucket
+        - S3WritePolicy:
+            BucketName: !Ref DataBucket
+        - DynamoDBWritePolicy:
+            TableName: !Ref ExecutionsTable
+      Events:
+        CsvUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref DataBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: input/
+  DiagnosticsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-diagnostics'
+      CodeUri: src/diagnostics/
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          EXECUTIONS_TABLE: !Ref ExecutionsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ExecutionsTable
+Outputs:
+  DataBucketName:
+    Value: !Ref DataBucket
+  ExecutionsTableName:
+    Value: !Ref ExecutionsTable
+  ProcessorFunctionName:
+    Value: !Ref ProcessorFunction
+  DiagnosticsFunctionName:
+    Value: !Ref DiagnosticsFunction
