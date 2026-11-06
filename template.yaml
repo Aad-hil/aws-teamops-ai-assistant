@@ -8,6 +8,11 @@ Globals:
     MemorySize: 128
     Architectures:
       - x86_64
+Parameters:
+  KnowledgeBaseId:
+    Type: String
+    Description: Existing Bedrock Knowledge Base ID; required for retrieval Lambda
+    AllowedPattern: '[A-Za-z0-9]{10}'
 Resources:
   DataBucket:
     Type: AWS::S3::Bucket
@@ -59,7 +64,27 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref ExecutionsTable
+  KnowledgeRetrievalFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-kb-retrieval'
+      CodeUri: src/kb_retrieval/
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          KNOWLEDGE_BASE_ID: !Ref KnowledgeBaseId
+      Policies:
+        - Statement:
+            - Sid: RetrieveOnlyConfiguredKnowledgeBase
+              Effect: Allow
+              Action:
+                - bedrock:Retrieve
+              Resource: !Sub 'arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:knowledge-base/${KnowledgeBaseId}'
 Outputs:
+  KnowledgeRetrievalFunctionName:
+    Value: !Ref KnowledgeRetrievalFunction
+  KnowledgeRetrievalFunctionArn:
+    Value: !GetAtt KnowledgeRetrievalFunction.Arn
   DataBucketName:
     Value: !Ref DataBucket
   ExecutionsTableName:
