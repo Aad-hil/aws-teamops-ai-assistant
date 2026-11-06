@@ -20,7 +20,7 @@ def test_retrieval_response_is_bounded(monkeypatch):
     class FakeClient:
         def retrieve(self, **kwargs):
             assert kwargs["knowledgeBaseId"] == "ABCDEFGHIJ"
-            assert kwargs["retrievalConfiguration"]["vectorSearchConfiguration"]["numberOfResults"] == 5
+            assert kwargs["retrievalConfiguration"]["managedSearchConfiguration"]["numberOfResults"] == 5
             return {"retrievalResults": [{"content": {"text": "x" * 3000}, "score": 0.8, "location": {"s3Location": {"uri": "s3://demo/knowledge-base/troubleshooting.md"}}}]}
     with patch.object(module.boto3, "client", return_value=FakeClient()):
         result = module.lambda_handler({"arguments": {"query": "SCHEMA_MISMATCH"}}, None)
