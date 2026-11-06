@@ -32,7 +32,7 @@ def lambda_handler(event, context):
         response = client.retrieve(
             knowledgeBaseId=kb_id,
             retrievalQuery={"text": query.strip()},
-            retrievalConfiguration={"vectorSearchConfiguration": {"numberOfResults": MAX_RESULTS}},
+            retrievalConfiguration={"managedSearchConfiguration": {"numberOfResults": MAX_RESULTS}},
         )
         results = []
         for item in response.get("retrievalResults", []):
