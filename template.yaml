@@ -13,6 +13,10 @@ Parameters:
     Type: String
     Description: Existing Bedrock Knowledge Base ID; required for retrieval Lambda
     AllowedPattern: '[A-Za-z0-9]{10}'
+  HarnessArn:
+    Type: String
+    Description: Existing AgentCore Harness ARN for the private chat adapter
+    AllowedPattern: 'arn:aws[a-zA-Z-]*:bedrock-agentcore:.+:harness/.+'
 Resources:
   DataBucket:
     Type: AWS::S3::Bucket
@@ -64,6 +68,24 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref ExecutionsTable
+  ChatApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-chat-api'
+      CodeUri: src/chat_api/
+      Handler: app.lambda_handler
+      Timeout: 120
+      MemorySize: 256
+      Environment:
+        Variables:
+          HARNESS_ARN: !Ref HarnessArn
+      Policies:
+        - Statement:
+            - Sid: InvokeOnlyTeamOpsHarness
+              Effect: Allow
+              Action:
+                - bedrock-agentcore:InvokeHarness
+              Resource: !Ref HarnessArn
   KnowledgeRetrievalFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -81,6 +103,10 @@ Resources:
                 - bedrock:Retrieve
               Resource: !Sub 'arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:knowledge-base/${KnowledgeBaseId}'
 Outputs:
+  ChatApiFunctionName:
+    Value: !Ref ChatApiFunction
+  ChatApiFunctionArn:
+    Value: !GetAtt ChatApiFunction.Arn
   KnowledgeRetrievalFunctionName:
     Value: !Ref KnowledgeRetrievalFunction
   KnowledgeRetrievalFunctionArn:
