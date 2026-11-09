@@ -68,6 +68,41 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref ExecutionsTable
+  ChatSessionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: sessionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sessionId
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+  DashboardApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-dashboard-api'
+      CodeUri: src/dashboard_api/
+      Handler: app.lambda_handler
+      Timeout: 35
+      MemorySize: 128
+      Environment:
+        Variables:
+          DIAGNOSTICS_FUNCTION: !Ref DiagnosticsFunction
+          KNOWLEDGE_FUNCTION: !Ref KnowledgeRetrievalFunction
+          ALLOWED_GROUP: teamops-users
+      Policies:
+        - Statement:
+            - Sid: InvokeDashboardServices
+              Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource:
+                - !GetAtt DiagnosticsFunction.Arn
+                - !GetAtt KnowledgeRetrievalFunction.Arn
   ChatApiFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -79,11 +114,15 @@ Resources:
       Environment:
         Variables:
           HARNESS_ARN: !Ref HarnessArn
+          CHAT_SESSIONS_TABLE: !Ref ChatSessionsTable
       Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ChatSessionsTable
         - Statement:
             - Sid: InvokeOnlyTeamOpsHarness
               Effect: Allow
               Action:
+                - bedrock-agentcore:InvokeAgentRuntime
                 - bedrock-agentcore:InvokeHarness
               Resource: !Ref HarnessArn
   KnowledgeRetrievalFunction:
