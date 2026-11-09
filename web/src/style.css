@@ -52,3 +52,34 @@ button.nav.active {background:#203a68;}
   .history-open {justify-content:center;padding:10px;flex:0 1 auto;}
   .history-delete {padding:5px;}
 }
+
+
+/* Safe assistant Markdown rendering */
+.markdown-message {white-space:normal;line-height:1.65;overflow-wrap:anywhere;min-width:0;}
+.markdown-message > :first-child {margin-top:0;}
+.markdown-message > :last-child {margin-bottom:0;}
+.markdown-message p {margin:0 0 12px;}
+.markdown-message h1,.markdown-message h2,.markdown-message h3,.markdown-message h4 {line-height:1.35;margin:18px 0 9px;font-weight:650;}
+.markdown-message h1 {font-size:20px;}
+.markdown-message h2 {font-size:17px;}
+.markdown-message h3 {font-size:15px;}
+.markdown-message ul,.markdown-message ol {padding-left:23px;margin:8px 0 14px;}
+.markdown-message li {margin:4px 0;}
+.markdown-message li > p {margin:0;}
+.markdown-message a {color:#8bbaff;text-decoration:underline;text-underline-offset:2px;}
+.markdown-message a:hover {color:#c7ddff;}
+.markdown-message blockquote {margin:12px 0;padding:8px 12px;border-left:3px solid #5686d7;background:#111d31;color:#c5d5ef;}
+.markdown-message :not(pre)>code {background:#0c1628;border-radius:5px;padding:2px 5px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;}
+.markdown-table-scroll {max-width:100%;overflow-x:auto;margin:12px 0;}
+.markdown-message table {border-collapse:collapse;min-width:max-content;font-size:12px;}
+.markdown-message th,.markdown-message td {padding:9px 12px;border:1px solid #344865;text-align:left;}
+.markdown-message th {background:#203550;color:#e1edff;}
+.markdown-message tr:nth-child(even) {background:#111c30;}
+.markdown-code-block {margin:12px 0;background:#0c1423;border:1px solid #35455e;border-radius:9px;overflow:hidden;}
+.markdown-code-block pre {margin:0;white-space:pre;overflow-x:auto;padding:15px;font-size:12px;line-height:1.65;}
+.markdown-code-block pre code {font-family:ui-monospace,SFMono-Regular,Consolas,monospace;}
+.copy-code {float:right;display:flex;align-items:center;gap:5px;margin:7px;padding:6px 9px;background:#263a55;border:1px solid #3b5374;border-radius:7px;color:#d5e4f7;font-size:11px;cursor:pointer;}
+.copy-code:hover {background:#355276;}
+.markdown-message hr {border:0;border-top:1px solid #334766;margin:18px 0;}
+.markdown-message input[type=checkbox] {min-width:auto;flex:none;}
+.message.assistant .bubble {min-width:0;max-width:min(90%,850px);}
