@@ -75,12 +75,22 @@ Resources:
       AttributeDefinitions:
         - AttributeName: sessionId
           AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: updatedAt
+          AttributeType: N
       KeySchema:
         - AttributeName: sessionId
           KeyType: HASH
-      TimeToLiveSpecification:
-        AttributeName: expiresAt
-        Enabled: true
+      GlobalSecondaryIndexes:
+        - IndexName: UserHistoryIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+            - AttributeName: updatedAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
   DashboardApiFunction:
     Type: AWS::Serverless::Function
     Properties:
