@@ -64,8 +64,9 @@ async function deleteConversation(id:string){
     setHistoryError("");
   }catch(e){setHistoryError(e instanceof Error?e.message:"Could not delete conversation");}
 }
-useEffect(()=>{if(loggedIn)void loadHistory();},[loggedIn]);
+
 const[loggedIn,setLoggedIn]=useState(()=>!!pool.getCurrentUser());
+useEffect(()=>{if(loggedIn)void loadHistory();},[loggedIn]);
 const[username,setUsername]=useState("");
 const[password,setPassword]=useState("");
 const[authBusy,setAuthBusy]=useState(false);
