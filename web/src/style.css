@@ -26,3 +26,29 @@ button.nav.active {background:#203a68;}
   button.nav {font-size:0;justify-content:center;}
   button.nav svg {flex-shrink:0;}
 }
+
+
+/* Persistent user conversation history */
+.history {min-height:0;display:flex;flex-direction:column;margin-top:18px;flex:1;}
+.history-title {margin:16px 12px 10px;}
+.history-list {overflow-y:auto;flex:1;min-height:0;padding-right:3px;}
+.history-item {display:flex;align-items:center;border-radius:8px;margin:3px 0;gap:2px;}
+.history-item.selected {background:#203a68;}
+.history-item:hover {background:#1a2b48;}
+.history-open {border:0;color:#b9c9df;background:transparent;display:flex;align-items:center;gap:9px;padding:10px 6px 10px 10px;min-width:0;flex:1;cursor:pointer;text-align:left;font:inherit;font-size:12px;}
+.history-open span {overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.history-open svg {flex-shrink:0;}
+.history-delete {display:flex;border:0;background:transparent;color:#8293b0;cursor:pointer;border-radius:7px;padding:7px;flex-shrink:0;}
+.history-delete:hover {color:#fda4af;background:#3a2537;}
+.history-empty,.history-error {padding:4px 12px;color:#8293b0;font-size:11px;line-height:1.5;}
+.history-error {color:#fda4af;}
+.workspace-title {margin-top:14px;}
+.history button:disabled {opacity:.5;cursor:wait;}
+@media(max-width:750px){
+  aside {width:78px;}
+  aside .history {display:flex;min-height:0;}
+  .history-title,.history-open span,.history-empty,.history-error {display:none;}
+  .history-item {justify-content:center;flex-wrap:wrap;}
+  .history-open {justify-content:center;padding:10px;flex:0 1 auto;}
+  .history-delete {padding:5px;}
+}
