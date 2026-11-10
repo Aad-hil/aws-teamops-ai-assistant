@@ -209,6 +209,14 @@ def lambda_handler(event, context):
         if not isinstance(user_id, str) or not user_id:
             return _response(401, {"error": "Unauthorized"})
 
+        # Self-registered users must be approved into the operations group.
+        groups = claims.get("cognito:groups", [])
+        if isinstance(groups, str):
+            raw_groups = groups.strip().strip("[]")
+            groups = [part.strip().strip("\\\"'") for part in raw_groups.split(",") if part.strip()]
+        if not isinstance(groups, list) or "teamops-users" not in groups:
+            return _response(403, {"error": "Account awaiting administrator approval"})
+
         route = event.get("routeKey", "")
         method = event.get("requestContext", {}).get("http", {}).get("method", "")
         if route == "GET /conversations":
