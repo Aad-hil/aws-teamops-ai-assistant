@@ -83,3 +83,23 @@ button.nav.active {background:#203a68;}
 .markdown-message hr {border:0;border-top:1px solid #334766;margin:18px 0;}
 .markdown-message input[type=checkbox] {min-width:auto;flex:none;}
 .message.assistant .bubble {min-width:0;max-width:min(90%,850px);}
+
+
+/* Cognito account creation, verification, recovery and approval */
+.auth-page{min-height:100vh;display:grid;place-items:center;background:#0b1120;padding:22px;color:#e9eef7;}
+.auth-card{width:min(100%,440px);padding:34px;background:#17233a;border:1px solid #2e3e5b;border-radius:18px;box-shadow:0 20px 65px #0004;}
+.auth-logo{display:inline-block;background:#2663eb;border-radius:9px;padding:9px 13px;font-weight:700;margin-bottom:24px;}
+.auth-card h1{font-size:23px;line-height:1.25;margin:0 0 10px;}
+.auth-subtitle{font-size:13px;line-height:1.6;color:#b1c1d8;margin:0 0 22px;}
+.auth-form{display:flex;flex-direction:column;gap:15px;background:none;border:0;padding:0;}
+.auth-form label{display:flex;flex-direction:column;gap:7px;font-size:12px;color:#ced8e7;}
+.auth-form input{width:100%;border:1px solid #3b5274;border-radius:9px;background:#0f1b2e;padding:12px;color:white;min-width:0;flex:none;}
+.auth-form input:focus{border-color:#6a9fff;outline:2px solid #6a9fff44;}
+.auth-form input:disabled{opacity:.55;}
+.auth-primary{width:100%;background:#3577ec;border:0;border-radius:9px;color:white;padding:13px;cursor:pointer;font-size:13px;font-weight:600;margin-top:5px;}
+.auth-primary:disabled{opacity:.55;cursor:wait;}
+.auth-link{border:0;background:transparent;color:#91baff;cursor:pointer;text-decoration:underline;text-underline-offset:2px;font-size:12px;padding:5px;}
+.auth-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:19px;}
+.auth-error{color:#fda4af;font-size:12px;line-height:1.5;margin:0;}
+.auth-notice{color:#9fe5bf;font-size:12px;line-height:1.5;}
+.auth-card code{background:#0c1628;padding:2px 5px;border-radius:4px;}
