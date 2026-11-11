@@ -19,7 +19,7 @@ RUN_ID_PATTERN = re.compile(r"^jr_[a-fA-F0-9]{16,128}$")
 MAX_EVENTS = 20
 MAX_BYTES_PER_MESSAGE = 700
 MAX_WINDOW = timedelta(hours=24)
-REDACT = re.compile(r"(?i)(password|secret|authorization|token|api[_-]?key)\\s*[:=]\\s*([^\\s,;]+)")
+REDACT = re.compile(r"(?i)(password|secret|authorization|token|api[_-]?key)\s*[:=]\s*([^\s,;]+)")
 
 
 def _error(message):
