@@ -1,0 +1,255 @@
+{
+  "version": 1,
+  "sourceType": "reconstructed-synthetic",
+  "verifiedProductionLogs": 0,
+  "incidentCount": 40,
+  "sopCount": 20,
+  "services": [
+    "glue",
+    "redshift",
+    "lambda",
+    "pipeline"
+  ],
+  "documents": [
+    {
+      "path": "knowledge/etl/sops/glue/sop-01-spark-memory.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/glue/sop-02-vpc-jdbc.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/glue/sop-03-bookmark.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/glue/sop-04-catalog-schema.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/glue/sop-05-s3-permission.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/redshift/sop-06-copy-format.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/redshift/sop-07-copy-column.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/redshift/sop-08-copy-encoding.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/redshift/sop-09-copy-s3.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/redshift/sop-10-wlm.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/lambda/sop-11-timeout.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/lambda/sop-12-throttle.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/lambda/sop-13-iam.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/lambda/sop-14-event.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/lambda/sop-15-async.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/pipeline/sop-16-step-failed.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/pipeline/sop-17-step-stuck.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/pipeline/sop-18-s3-trigger.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/pipeline/sop-19-duplicate.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/sops/pipeline/sop-20-partial.md",
+      "kind": "sop"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-001-skewed-join-causes-executor-oom.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-002-driver-memory-exhausted-collecting-full-dataset.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-003-private-redshift-jdbc-connection-times-out.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-004-glue-vpc-subnet-lacks-s3-network-path.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-005-bookmark-reprocesses-old-s3-files.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-006-concurrent-bookmark-commits-collide.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-007-crawler-discovers-new-unexpected-field.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-008-parquet-partition-type-conflict.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-009-glue-input-read-accessdenied.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-010-glue-kms-decrypt-denied.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-011-large-shuffle-spills-and-stalls.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/glue/glue-012-jdbc-dns-hostname-unresolved.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-001-copy-delimiter-mismatch.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-002-copy-source-has-unexpected-extra-column.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-003-copy-missing-required-mapped-column.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-004-copy-fails-on-malformed-utf-8.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-005-copy-fails-on-wrong-timestamp-shape.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-006-copy-role-cannot-read-s3-prefix.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-007-copy-cannot-decrypt-sse-kms-object.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-008-etl-copy-waits-in-wlm-queue.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-009-long-aggregation-canceled-by-wlm.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-010-copy-numeric-overflow.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-011-copy-fails-on-invalid-multibyte-text.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/redshift/rs-012-copy-csv-quote-parsing-mismatch.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-001-etl-starter-times-out-waiting-on-api.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-002-large-s3-manifest-slows-invocation.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-003-burst-uploads-exhaust-concurrency.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-004-reserved-concurrency-blocks-invocations.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-005-lambda-cannot-start-glue-job.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-006-lambda-cannot-write-etl-status-item.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-007-upload-to-filtered-s3-prefix-not-received.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/lambda/lambda-008-duplicate-records-after-s3-retry.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-001-step-functions-glue-task-fails.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-002-glue-job-finished-but-orchestrator-pending.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-003-new-parquet-object-does-not-start-pipeline.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-004-bad-suffix-filter-skips-data-file.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-005-replay-duplicates-redshift-rows.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-006-bookmark-reset-reprocesses-archive.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-007-staging-success-but-publish-fails.md",
+      "kind": "incident"
+    },
+    {
+      "path": "knowledge/etl/incidents/pipeline/etl-008-reporting-table-refreshed-partially.md",
+      "kind": "incident"
+    }
+  ]
+}
