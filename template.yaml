@@ -22,6 +22,8 @@ Parameters:
     Type: String
     Description: Existing AgentCore Harness ARN for the private chat adapter
     AllowedPattern: 'arn:aws[a-zA-Z-]*:bedrock-agentcore:.+:harness/.+'
+Conditions:
+  EnableCloudWatchGlueDiagnostics: !Not [!Equals [!Ref GlueDiagnosticJobName, '']]
 Resources:
   DataBucket:
     Type: AWS::S3::Bucket
@@ -90,6 +92,31 @@ Resources:
                 - glue:GetJobRuns
                 - glue:GetJobRun
               Resource: !Sub 'arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:job/${GlueDiagnosticJobName}'
+  CloudWatchGlueDiagnosticsFunction:
+    Type: AWS::Serverless::Function
+    Condition: EnableCloudWatchGlueDiagnostics
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-cloudwatch-glue-diagnostics'
+      CodeUri: src/cloudwatch_diagnostics/
+      Handler: app.lambda_handler
+      Timeout: 30
+      Environment:
+        Variables:
+          GLUE_JOB_NAME: !Ref GlueDiagnosticJobName
+      Policies:
+        - Statement:
+            - Sid: GetAllowedGlueJobRun
+              Effect: Allow
+              Action:
+                - glue:GetJobRun
+              Resource: !Sub 'arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:job/${GlueDiagnosticJobName}'
+            - Sid: ReadOnlyGluePythonShellLogGroups
+              Effect: Allow
+              Action:
+                - logs:FilterLogEvents
+              Resource:
+                - !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-glue/python-jobs/error:*'
+                - !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws-glue/python-jobs/output:*'
   ChatSessionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -194,3 +221,9 @@ Outputs:
     Value: !Ref GlueDiagnosticsFunction
   GlueDiagnosticsFunctionArn:
     Value: !GetAtt GlueDiagnosticsFunction.Arn
+  CloudWatchGlueDiagnosticsFunctionName:
+    Condition: EnableCloudWatchGlueDiagnostics
+    Value: !Ref CloudWatchGlueDiagnosticsFunction
+  CloudWatchGlueDiagnosticsFunctionArn:
+    Condition: EnableCloudWatchGlueDiagnostics
+    Value: !GetAtt CloudWatchGlueDiagnosticsFunction.Arn
