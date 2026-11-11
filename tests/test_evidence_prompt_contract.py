@@ -12,7 +12,7 @@ class EvidencePromptContract(unittest.TestCase):
         for value in ("CloudWatch logs not retrieved", "Glue diagnostics", "customer-ingestion", "synthetic", "read-only"):
             self.assertIn(value, PROMPT)
     def test_grounded_demo(self):
-        for value in ("--demo-mode", "DEMO_ETL_VALIDATION_FAILURE", "Python shell", "earlier SUCCEEDED", "SSM"):
+        for value in ("--demo-mode", "DEMO_ETL_VALIDATION_FAILURE", "Python shell", "previous SUCCEEDED", "SSM"):
             self.assertIn(value, PROMPT)
     def test_no_hallucinated_recovery(self):
         for value in ("Do not invent CloudWatch alarms", "Do not invent SSM", "no customer-data writes", "Requires authorization"):
