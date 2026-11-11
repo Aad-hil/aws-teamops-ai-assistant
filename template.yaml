@@ -18,10 +18,24 @@ Parameters:
     Default: ''
     Description: Optional allowed AWS Glue job for diagnostics
     AllowedPattern: '^$|^[A-Za-z0-9_-]{1,255}$'
+  RedshiftDiagnosticWorkgroup:
+    Type: String
+    Default: ''
+    Description: Existing authorized Redshift Serverless workgroup; blank disables diagnostics
+    AllowedPattern: '^$|^[a-z0-9-]{3,63}$'
+  RedshiftDiagnosticDatabase:
+    Type: String
+    Default: ''
+    Description: Existing database with strictly read-only monitoring access
+    AllowedPattern: '^$|^[A-Za-z][A-Za-z0-9_-]{0,126}$'
   HarnessArn:
     Type: String
     Description: Existing AgentCore Harness ARN for the private chat adapter
     AllowedPattern: 'arn:aws[a-zA-Z-]*:bedrock-agentcore:.+:harness/.+'
+Conditions:
+  EnableRedshiftDiagnostics: !And
+    - !Not [!Equals [!Ref RedshiftDiagnosticWorkgroup, '']]
+    - !Not [!Equals [!Ref RedshiftDiagnosticDatabase, '']]
 Resources:
   DataBucket:
     Type: AWS::S3::Bucket
@@ -90,6 +104,32 @@ Resources:
                 - glue:GetJobRuns
                 - glue:GetJobRun
               Resource: !Sub 'arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:job/${GlueDiagnosticJobName}'
+  RedshiftDiagnosticsFunction:
+    Type: AWS::Serverless::Function
+    Condition: EnableRedshiftDiagnostics
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-redshift-diagnostics'
+      CodeUri: src/redshift_diagnostics/
+      Handler: app.lambda_handler
+      Timeout: 30
+      Environment:
+        Variables:
+          REDSHIFT_WORKGROUP: !Ref RedshiftDiagnosticWorkgroup
+          REDSHIFT_DATABASE: !Ref RedshiftDiagnosticDatabase
+      Policies:
+        - Statement:
+            - Sid: ReadRedshiftServerlessQueryData
+              Effect: Allow
+              Action:
+                - redshift-data:ExecuteStatement
+                - redshift-data:DescribeStatement
+                - redshift-data:GetStatementResult
+              Resource: '*'
+            - Sid: GetOnlyConfiguredServerlessWorkgroupCredentials
+              Effect: Allow
+              Action:
+                - redshift-serverless:GetCredentials
+              Resource: !Sub 'arn:${AWS::Partition}:redshift-serverless:${AWS::Region}:${AWS::AccountId}:workgroup/*'
   ChatSessionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -194,3 +234,9 @@ Outputs:
     Value: !Ref GlueDiagnosticsFunction
   GlueDiagnosticsFunctionArn:
     Value: !GetAtt GlueDiagnosticsFunction.Arn
+  RedshiftDiagnosticsFunctionName:
+    Condition: EnableRedshiftDiagnostics
+    Value: !Ref RedshiftDiagnosticsFunction
+  RedshiftDiagnosticsFunctionArn:
+    Condition: EnableRedshiftDiagnostics
+    Value: !GetAtt RedshiftDiagnosticsFunction.Arn
