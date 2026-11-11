@@ -13,6 +13,11 @@ Parameters:
     Type: String
     Description: Existing Bedrock Knowledge Base ID; required for retrieval Lambda
     AllowedPattern: '[A-Za-z0-9]{10}'
+  GlueDiagnosticJobName:
+    Type: String
+    Default: ''
+    Description: Optional allowed AWS Glue job for diagnostics
+    AllowedPattern: '^$|^[A-Za-z0-9_-]{1,255}$'
   HarnessArn:
     Type: String
     Description: Existing AgentCore Harness ARN for the private chat adapter
@@ -68,6 +73,23 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref ExecutionsTable
+  GlueDiagnosticsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-glue-diagnostics'
+      CodeUri: src/glue_diagnostics/
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          GLUE_JOB_NAME: !Ref GlueDiagnosticJobName
+      Policies:
+        - Statement:
+            - Sid: ReadOnlyAllowedGlueJobRuns
+              Effect: Allow
+              Action:
+                - glue:GetJobRuns
+                - glue:GetJobRun
+              Resource: !Sub 'arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:job/${GlueDiagnosticJobName}'
   ChatSessionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -168,3 +190,7 @@ Outputs:
     Value: !Ref ProcessorFunction
   DiagnosticsFunctionName:
     Value: !Ref DiagnosticsFunction
+  GlueDiagnosticsFunctionName:
+    Value: !Ref GlueDiagnosticsFunction
+  GlueDiagnosticsFunctionArn:
+    Value: !GetAtt GlueDiagnosticsFunction.Arn
